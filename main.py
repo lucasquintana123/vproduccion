@@ -17,6 +17,20 @@ st.set_page_config(
 
 
 # ============================================================
+# SESSION STATE
+# ============================================================
+
+if "pagina" not in st.session_state:
+    st.session_state.pagina = "inicio"
+
+if "mostrar_graficas" not in st.session_state:
+    st.session_state.mostrar_graficas = False
+
+if "mostrar_analisis" not in st.session_state:
+    st.session_state.mostrar_analisis = False
+
+
+# ============================================================
 # CSS GENERAL
 # ============================================================
 
@@ -79,6 +93,7 @@ header {
     color: white;
     font-size: 50px;
     font-weight: 800;
+    margin-bottom: 10px;
 }
 
 .titulo-principal p {
@@ -116,17 +131,18 @@ header {
 
 
 /* ============================================================
-   SUBTÍTULOS
+   SUBTÍTULOS DE LAS CARDS
    ============================================================ */
 
 .card h2 {
     color: white;
     font-size: 30px;
+    margin-bottom: 20px;
 }
 
 
 /* ============================================================
-   TEXTO CARDS
+   TEXTO DE LAS CARDS
    ============================================================ */
 
 .card p {
@@ -155,6 +171,8 @@ header {
     );
 
     color: white;
+
+    transition: 0.3s;
 }
 
 .stButton > button:hover {
@@ -211,7 +229,7 @@ body {
 
 
 /* ============================================================
-   PLOTLY / ELEMENTOS RESPONSIVOS
+   PLOTLY
    ============================================================ */
 
 [data-testid="stPlotlyChart"] {
@@ -226,6 +244,7 @@ body {
 
 [data-testid="stDataFrame"] {
     width: 100% !important;
+    max-width: 100% !important;
 }
 
 
@@ -237,22 +256,34 @@ body {
     overflow-x: hidden;
 }
 
+
+/* ============================================================
+   RESPONSIVIDAD
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .titulo-principal h1 {
+        font-size: 36px;
+    }
+
+    .titulo-principal p {
+        font-size: 17px;
+    }
+
+    .card {
+        padding: 25px;
+        min-height: 280px;
+    }
+
+    .card h2 {
+        font-size: 25px;
+    }
+
+}
+
 </style>
 """, unsafe_allow_html=True)
-
-
-# ============================================================
-# SESSION STATE
-# ============================================================
-
-if "pagina" not in st.session_state:
-    st.session_state.pagina = "inicio"
-
-if "mostrar_graficas" not in st.session_state:
-    st.session_state.mostrar_graficas = False
-
-if "mostrar_analisis" not in st.session_state:
-    st.session_state.mostrar_analisis = False
 
 
 # ============================================================
@@ -270,10 +301,14 @@ def volver_inicio():
 
 
 # ============================================================
-# PANTALLA INICIO
+# PANTALLA DE INICIO
 # ============================================================
 
 if st.session_state.pagina == "inicio":
+
+    # --------------------------------------------------------
+    # TÍTULO
+    # --------------------------------------------------------
 
     st.markdown("""
     <div class="titulo-principal">
@@ -291,11 +326,19 @@ if st.session_state.pagina == "inicio":
     """, unsafe_allow_html=True)
 
 
+    # --------------------------------------------------------
+    # LÍNEA DECORATIVA
+    # --------------------------------------------------------
+
     st.markdown(
         '<div class="linea"></div>',
         unsafe_allow_html=True
     )
 
+
+    # --------------------------------------------------------
+    # TEXTO INTRODUCTORIO
+    # --------------------------------------------------------
 
     st.markdown("""
     <div style="
@@ -349,6 +392,9 @@ if st.session_state.pagina == "inicio":
         """, unsafe_allow_html=True)
 
 
+        st.write("")
+
+
         if st.button(
             "Ingresar a la Demo",
             key="demo",
@@ -356,7 +402,6 @@ if st.session_state.pagina == "inicio":
         ):
 
             st.session_state.pagina = "demo"
-
             st.rerun()
 
 
@@ -390,6 +435,9 @@ if st.session_state.pagina == "inicio":
         """, unsafe_allow_html=True)
 
 
+        st.write("")
+
+
         if st.button(
             "Ingresar a la Versión Completa",
             key="completa",
@@ -397,15 +445,22 @@ if st.session_state.pagina == "inicio":
         ):
 
             st.session_state.pagina = "completa"
-
             st.rerun()
 
+
+    # ========================================================
+    # ESPACIO
+    # ========================================================
 
     st.markdown(
         "<br><br>",
         unsafe_allow_html=True
     )
 
+
+    # ========================================================
+    # FOOTER
+    # ========================================================
 
     st.markdown("""
     <div class="footer">
@@ -415,14 +470,16 @@ if st.session_state.pagina == "inicio":
 
 
 # ============================================================
-# DEMO
+# PÁGINA DEMO
 # ============================================================
 
 elif st.session_state.pagina == "demo":
 
-    col1, col2 = st.columns(
-        [1, 8]
-    )
+    # --------------------------------------------------------
+    # BOTÓN VOLVER
+    # --------------------------------------------------------
+
+    col1, _ = st.columns([1, 8])
 
     with col1:
 
@@ -434,18 +491,24 @@ elif st.session_state.pagina == "demo":
             volver_inicio()
 
 
+    # --------------------------------------------------------
+    # EJECUTAR DEMO
+    # --------------------------------------------------------
+
     mostrar_demo()
 
 
 # ============================================================
-# VERSIÓN COMPLETA
+# PÁGINA VERSIÓN COMPLETA
 # ============================================================
 
 elif st.session_state.pagina == "completa":
 
-    col1, col2 = st.columns(
-        [1, 8]
-    )
+    # --------------------------------------------------------
+    # BOTÓN VOLVER
+    # --------------------------------------------------------
+
+    col1, _ = st.columns([1, 8])
 
     with col1:
 
@@ -456,5 +519,9 @@ elif st.session_state.pagina == "completa":
 
             volver_inicio()
 
+
+    # --------------------------------------------------------
+    # EJECUTAR APLICACIÓN COMPLETA
+    # --------------------------------------------------------
 
     mostrar_completa()
