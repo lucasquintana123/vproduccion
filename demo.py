@@ -78,14 +78,9 @@ def mostrar_demo():
     # HEADER
     # ========================================================
 
-    st.title(
-        "🍫 Modelo exportación del cacao y sus productos derivados"
-    )
+    st.title("🍫 Modelo exportación del cacao y sus productos derivados")
 
-    st.success(
-        "DEMO AUTOMÁTICA DEL MODELO PREDICTIVO"
-    )
-
+    st.success("DEMO AUTOMÁTICA DEL MODELO PREDICTIVO")
 
     st.markdown("""
     ### ¿Qué hace esta demo?
@@ -150,13 +145,8 @@ def mostrar_demo():
     # CARGAR MODELO
     # ========================================================
 
-    model = joblib.load(
-        "modelo.pkl"
-    )
-
-    columnas_modelo = joblib.load(
-        "columnas_modelo.pkl"
-    )
+    model = joblib.load("modelo.pkl")
+    columnas_modelo = joblib.load("columnas_modelo.pkl")
 
 
     # ========================================================
@@ -166,84 +156,39 @@ def mostrar_demo():
     def preprocesar_datos(df):
 
         df = convertir_tipos(df)
-
         df = categorizar_trimestre(df)
-
         df = categorizar_cosecha(df)
-
         df = mapear_categoria(df)
-
         df = llenar_na_continente_destino(df)
-
         df = escalar_variables(df)
-
         df = renombrar_columnas(df)
-
         df = filtrar_paises(df)
-
         df = analisis_univariado(df)
 
-        df["venta_fiable"] = df.apply(
-            calcular_calificacion,
-            axis=1
-        )
-
-        df["venta_fiable"] = (
-            df["venta_fiable"]
-            .fillna(0)
-        )
-
+        df["venta_fiable"] = df.apply(calcular_calificacion, axis=1)
+        df["venta_fiable"] = df["venta_fiable"].fillna(0)
 
         from sklearn.preprocessing import MinMaxScaler
 
         scaler_extra = MinMaxScaler()
-
-        columnas_extra = [
-            "Peso_kilos_netos",
-            "Valor_FOB_USD"
-        ]
-
-        columnas_existentes = [
-            c
-            for c in columnas_extra
-            if c in df.columns
-        ]
-
+        columnas_extra = ["Peso_kilos_netos", "Valor_FOB_USD"]
+        columnas_existentes = [c for c in columnas_extra if c in df.columns]
 
         if len(columnas_existentes) > 0:
+            df[columnas_existentes] = scaler_extra.fit_transform(df[columnas_existentes])
 
-            df[columnas_existentes] = (
-                scaler_extra.fit_transform(
-                    df[columnas_existentes]
-                )
-            )
-
-
-        X = df.drop(
-            ["venta_fiable"],
-            axis=1
-        )
-
-        y = (
-            df["venta_fiable"]
-            .round()
-            .astype(int)
-        )
-
+        X = df.drop(["venta_fiable"], axis=1)
+        y = df["venta_fiable"].round().astype(int)
 
         X = dummy_creation(
             X,
-            X.select_dtypes(
-                include=["object"]
-            ).columns
+            X.select_dtypes(include=["object"]).columns
         )
-
 
         X = X.reindex(
             columns=columnas_modelo,
             fill_value=0
         )
-
 
         return X, y, df
 
@@ -254,20 +199,12 @@ def mostrar_demo():
 
     try:
 
-        df = pd.read_excel(
-            "demo.xlsx"
-        )
-
-        X, y, df_procesado = (
-            preprocesar_datos(df)
-        )
+        df = pd.read_excel("demo.xlsx")
+        X, y, df_procesado = preprocesar_datos(df)
 
         y_pred = model.predict(X)
 
-        df_procesado = (
-            df_procesado.copy()
-        )
-
+        df_procesado = df_procesado.copy()
         df_procesado["Prediccion"] = y_pred
 
 
@@ -275,96 +212,47 @@ def mostrar_demo():
         # MÉTRICAS
         # ====================================================
 
-        accuracy = accuracy_score(
-            y,
-            y_pred
-        )
-
-        mse = mean_squared_error(
-            y,
-            y_pred
-        )
-
-        precision = precision_score(
-            y,
-            y_pred,
-            zero_division=0
-        )
-
-        cm = confusion_matrix(
-            y,
-            y_pred
-        )
+        accuracy = accuracy_score(y, y_pred)
+        mse = mean_squared_error(y, y_pred)
+        precision = precision_score(y, y_pred, zero_division=0)
+        cm = confusion_matrix(y, y_pred)
 
 
         # ====================================================
         # KPI
         # ====================================================
 
-        st.markdown(
-            "## 📊 Métricas del modelo"
-        )
+        st.markdown("## 📊 Métricas del modelo")
 
-        col1, col2, col3 = st.columns(
-            3
-        )
+        col1, col2, col3 = st.columns(3)
 
+        col1.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">Exactitud</div>
+            <div class="kpi-value">{round(accuracy, 3)}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        col1.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-title">
-                    Exactitud
-                </div>
+        col2.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">Precisión</div>
+            <div class="kpi-value">{round(precision, 3)}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-                <div class="kpi-value">
-                    {round(accuracy, 3)}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-        col2.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-title">
-                    Precisión
-                </div>
-
-                <div class="kpi-value">
-                    {round(precision, 3)}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-        col3.markdown(
-            f"""
-            <div class="kpi-card">
-                <div class="kpi-title">
-                    MSE
-                </div>
-
-                <div class="kpi-value">
-                    {round(mse, 3)}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        col3.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">MSE</div>
+            <div class="kpi-value">{round(mse, 3)}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 
         # ====================================================
         # MATRIZ DE CONFUSIÓN
         # ====================================================
 
-        st.markdown(
-            "## 📊 Matriz de Confusión"
-        )
+        st.markdown("## 📊 Matriz de Confusión")
 
         st.markdown("""
         La matriz de confusión permite visualizar cuántas
@@ -372,19 +260,11 @@ def mostrar_demo():
         los valores reales frente a los predichos por el modelo.
         """)
 
-
         cm_df = pd.DataFrame(
             cm,
-            index=[
-                "Real 0",
-                "Real 1"
-            ],
-            columns=[
-                "Pred 0",
-                "Pred 1"
-            ]
+            index=["Real 0", "Real 1"],
+            columns=["Pred 0", "Pred 1"]
         )
-
 
         fig_cm = px.imshow(
             cm_df,
@@ -392,33 +272,21 @@ def mostrar_demo():
             color_continuous_scale="Blues"
         )
 
-
         fig_cm.update_layout(
             title="Matriz de Confusión",
             title_x=0.5,
             autosize=True,
-            margin=dict(
-                l=40,
-                r=40,
-                t=70,
-                b=40
-            )
+            margin=dict(l=40, r=40, t=70, b=40)
         )
 
-
-        st.plotly_chart(
-            fig_cm,
-            use_container_width=True
-        )
+        st.plotly_chart(fig_cm, use_container_width=True)
 
 
         # ====================================================
         # VISUALIZACIONES
         # ====================================================
 
-        st.markdown(
-            "## 📊 Visualizaciones"
-        )
+        st.markdown("## 📊 Visualizaciones")
 
         st.markdown("""
         Las siguientes visualizaciones muestran patrones
@@ -426,9 +294,7 @@ def mostrar_demo():
         chocolate hacia diferentes continentes.
         """)
 
-
         producto = "CHOCOLATE"
-
 
         df_procesado["Categoria"] = (
             df_procesado["Categoria"]
@@ -437,56 +303,29 @@ def mostrar_demo():
             .str.strip()
         )
 
-
         df_graf = df_procesado[
-            df_procesado["Categoria"]
-            .str.contains(
-                producto,
-                na=False
-            )
+            df_procesado["Categoria"].str.contains(producto, na=False)
         ]
 
-
         if df_graf.empty:
-
-            st.warning(
-                "No existen datos para generar gráficas "
-                "con el filtro aplicado."
-            )
-
+            st.warning("No existen datos para generar gráficas con el filtro aplicado.")
         else:
-
-            col1, col2 = st.columns(
-                2
-            )
-
+            col1, col2 = st.columns(2)
 
             # =================================================
             # GRÁFICA 1
             # =================================================
 
             with col1:
-
-                st.markdown(
-                    "#### Distribución de predicciones"
-                )
+                st.markdown("#### Distribución de predicciones")
 
                 conteo = (
                     df_graf["Prediccion"]
                     .value_counts()
                     .reset_index()
                 )
-
-                conteo.columns = [
-                    "Clase",
-                    "Cantidad"
-                ]
-
-                conteo = (
-                    conteo
-                    .sort_values("Clase")
-                )
-
+                conteo.columns = ["Clase", "Cantidad"]
+                conteo = conteo.sort_values("Clase")
 
                 fig1 = px.bar(
                     conteo,
@@ -495,65 +334,33 @@ def mostrar_demo():
                     text="Cantidad"
                 )
 
-
                 fig1.update_layout(
                     xaxis_title="Clase",
                     yaxis_title="Cantidad",
                     autosize=True,
-                    margin=dict(
-                        l=40,
-                        r=40,
-                        t=50,
-                        b=40
-                    )
+                    margin=dict(l=40, r=40, t=50, b=40)
                 )
 
-
-                st.plotly_chart(
-                    fig1,
-                    use_container_width=True
-                )
-
+                st.plotly_chart(fig1, use_container_width=True)
 
             # =================================================
             # GRÁFICA 2
             # =================================================
 
             with col2:
-
-                fiables = df_graf[
-                    df_graf["Prediccion"] == 1
-                ]
-
+                fiables = df_graf[df_graf["Prediccion"] == 1]
 
                 if fiables.empty:
-
-                    st.warning(
-                        "No hay exportaciones fiables "
-                        "para este filtro."
-                    )
-
+                    st.warning("No hay exportaciones fiables para este filtro.")
                 else:
-
-                    st.markdown(
-                        "#### Exportaciones fiables por continente"
-                    )
-
+                    st.markdown("#### Exportaciones fiables por continente")
 
                     conteo_cont = (
-                        fiables[
-                            "Continente_destino"
-                        ]
+                        fiables["Continente_destino"]
                         .value_counts()
                         .reset_index()
                     )
-
-
-                    conteo_cont.columns = [
-                        "Continente",
-                        "Cantidad"
-                    ]
-
+                    conteo_cont.columns = ["Continente", "Cantidad"]
 
                     fig2 = px.bar(
                         conteo_cont,
@@ -562,33 +369,21 @@ def mostrar_demo():
                         text="Cantidad"
                     )
 
-
                     fig2.update_layout(
                         xaxis_title="Continente",
                         yaxis_title="Cantidad",
                         autosize=True,
-                        margin=dict(
-                            l=40,
-                            r=40,
-                            t=50,
-                            b=40
-                        )
+                        margin=dict(l=40, r=40, t=50, b=40)
                     )
 
-
-                    st.plotly_chart(
-                        fig2,
-                        use_container_width=True
-                    )
+                    st.plotly_chart(fig2, use_container_width=True)
 
 
         # ====================================================
         # IA
         # ====================================================
 
-        st.markdown(
-            "## 🧠 Análisis Inteligente con IA"
-        )
+        st.markdown("## 🧠 Análisis Inteligente con IA")
 
         st.markdown("""
         La inteligencia artificial genera automáticamente
@@ -596,13 +391,8 @@ def mostrar_demo():
         el modelo, facilitando la toma de decisiones.
         """)
 
-
-        with st.spinner(
-            "Generando análisis inteligente..."
-        ):
-
+        with st.spinner("Generando análisis inteligente..."):
             try:
-
                 analisis = generar_analisis_ia(
                     accuracy,
                     precision,
@@ -614,25 +404,16 @@ def mostrar_demo():
                     "N/A",
                     0
                 )
-
-                st.markdown(
-                    analisis
-                )
-
+                st.markdown(analisis)
             except Exception as e:
-
-                st.error(
-                    f"Error generando análisis: {e}"
-                )
+                st.error(f"Error generando análisis: {e}")
 
 
         # ====================================================
         # DATASET
         # ====================================================
 
-        st.markdown(
-            "## 📋 Datos con Predicción"
-        )
+        st.markdown("## 📋 Datos con Predicción")
 
         st.markdown("""
         La tabla final contiene los datos procesados junto
@@ -640,29 +421,17 @@ def mostrar_demo():
         modelo.
         """)
 
-
-        st.dataframe(
-            df_procesado.head(20),
-            use_container_width=True
-        )
+        st.dataframe(df_procesado.head(20), use_container_width=True)
 
 
         # ====================================================
         # DESCARGA
         # ====================================================
 
-        st.markdown(
-            "## 📥 Descarga de resultados"
-        )
-
+        st.markdown("## 📥 Descarga de resultados")
 
         output = BytesIO()
-
-        df_procesado.to_excel(
-            output,
-            index=False
-        )
-
+        df_procesado.to_excel(output, index=False)
 
         st.download_button(
             "⬇️ Descargar Excel con Predicciones",
@@ -671,9 +440,5 @@ def mostrar_demo():
             use_container_width=True
         )
 
-
     except Exception as e:
-
-        st.error(
-            f"Ocurrió un error procesando el archivo: {e}"
-        )
+        st.error(f"Ocurrió un error procesando el archivo: {e}")
