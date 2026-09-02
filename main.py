@@ -84,6 +84,7 @@ header {
    ============================================================ */
 
 .titulo-principal {
+    width: 100%;
     text-align: center;
     padding-top: 20px;
     padding-bottom: 10px;
@@ -93,12 +94,13 @@ header {
     color: white;
     font-size: 50px;
     font-weight: 800;
-    margin-bottom: 10px;
+    margin: 0;
 }
 
 .titulo-principal p {
     color: #d6d6d6;
     font-size: 20px;
+    margin-top: 15px;
 }
 
 
@@ -129,21 +131,11 @@ header {
     border: 1px solid #6D4C41;
 }
 
-
-/* ============================================================
-   SUBTÍTULOS DE LAS CARDS
-   ============================================================ */
-
 .card h2 {
     color: white;
     font-size: 30px;
     margin-bottom: 20px;
 }
-
-
-/* ============================================================
-   TEXTO DE LAS CARDS
-   ============================================================ */
 
 .card p {
     color: #d0d0d0;
@@ -301,7 +293,7 @@ def volver_inicio():
 
 
 # ============================================================
-# PANTALLA DE INICIO
+# PÁGINA DE INICIO
 # ============================================================
 
 if st.session_state.pagina == "inicio":
@@ -313,9 +305,7 @@ if st.session_state.pagina == "inicio":
     st.markdown("""
     <div class="titulo-principal">
 
-        <h1>
-            🍫 Modelo Inteligente de Exportación del Cacao
-        </h1>
+        <h1>🍫 Modelo Inteligente de Exportación del Cacao</h1>
 
         <p>
             Sistema basado en Machine Learning e Inteligencia Artificial
@@ -327,7 +317,7 @@ if st.session_state.pagina == "inicio":
 
 
     # --------------------------------------------------------
-    # LÍNEA DECORATIVA
+    # LÍNEA
     # --------------------------------------------------------
 
     st.markdown(
@@ -337,7 +327,7 @@ if st.session_state.pagina == "inicio":
 
 
     # --------------------------------------------------------
-    # TEXTO INTRODUCTORIO
+    # TEXTO
     # --------------------------------------------------------
 
     st.markdown("""
@@ -391,9 +381,7 @@ if st.session_state.pagina == "inicio":
         </div>
         """, unsafe_allow_html=True)
 
-
         st.write("")
-
 
         if st.button(
             "Ingresar a la Demo",
@@ -434,9 +422,7 @@ if st.session_state.pagina == "inicio":
         </div>
         """, unsafe_allow_html=True)
 
-
         st.write("")
-
 
         if st.button(
             "Ingresar a la Versión Completa",
@@ -449,18 +435,13 @@ if st.session_state.pagina == "inicio":
 
 
     # ========================================================
-    # ESPACIO
+    # FOOTER
     # ========================================================
 
     st.markdown(
         "<br><br>",
         unsafe_allow_html=True
     )
-
-
-    # ========================================================
-    # FOOTER
-    # ========================================================
 
     st.markdown("""
     <div class="footer">
@@ -475,10 +456,6 @@ if st.session_state.pagina == "inicio":
 
 elif st.session_state.pagina == "demo":
 
-    # --------------------------------------------------------
-    # BOTÓN VOLVER
-    # --------------------------------------------------------
-
     col1, _ = st.columns([1, 8])
 
     with col1:
@@ -491,22 +468,14 @@ elif st.session_state.pagina == "demo":
             volver_inicio()
 
 
-    # --------------------------------------------------------
-    # EJECUTAR DEMO
-    # --------------------------------------------------------
-
     mostrar_demo()
 
 
 # ============================================================
-# PÁGINA VERSIÓN COMPLETA
+# PÁGINA COMPLETA
 # ============================================================
 
 elif st.session_state.pagina == "completa":
-
-    # --------------------------------------------------------
-    # BOTÓN VOLVER
-    # --------------------------------------------------------
 
     col1, _ = st.columns([1, 8])
 
@@ -519,9 +488,5 @@ elif st.session_state.pagina == "completa":
 
             volver_inicio()
 
-
-    # --------------------------------------------------------
-    # EJECUTAR APLICACIÓN COMPLETA
-    # --------------------------------------------------------
 
     mostrar_completa()
