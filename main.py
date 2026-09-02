@@ -304,14 +304,11 @@ if st.session_state.pagina == "inicio":
 
     st.markdown("""
     <div class="titulo-principal">
-
         <h1>🍫 Modelo Inteligente de Exportación del Cacao</h1>
-
         <p>
             Sistema basado en Machine Learning e Inteligencia Artificial
             para el análisis predictivo de exportaciones de cacao.
         </p>
-
     </div>
     """, unsafe_allow_html=True)
 
@@ -331,12 +328,7 @@ if st.session_state.pagina == "inicio":
     # --------------------------------------------------------
 
     st.markdown("""
-    <div style="
-        text-align:center;
-        font-size:20px;
-        color:#d0d0d0;
-        padding-bottom:30px;
-    ">
+    <div style="text-align:center; font-size:20px; color:#d0d0d0; padding-bottom:30px;">
         Seleccione la versión del sistema que desea utilizar.
     </div>
     """, unsafe_allow_html=True)
@@ -360,24 +352,15 @@ if st.session_state.pagina == "inicio":
 
         st.markdown("""
         <div class="card">
-
             <h2>Demo</h2>
-
-            <p>
-                Ejecuta el modelo con datos precargados.
-            </p>
-
-            <p>
-                Incluye:
-            </p>
-
+            <p>Ejecuta el modelo con datos precargados.</p>
+            <p>Incluye:</p>
             <p>
                 ✔ Predicciones automáticas<br>
                 ✔ Métricas del modelo<br>
                 ✔ Visualizaciones<br>
                 ✔ Análisis con IA
             </p>
-
         </div>
         """, unsafe_allow_html=True)
 
@@ -401,24 +384,15 @@ if st.session_state.pagina == "inicio":
 
         st.markdown("""
         <div class="card">
-
             <h2>Versión Completa</h2>
-
-            <p>
-                Plataforma interactiva personalizada.
-            </p>
-
-            <p>
-                Incluye:
-            </p>
-
+            <p>Plataforma interactiva personalizada.</p>
+            <p>Incluye:</p>
             <p>
                 ✔ Carga de Excel<br>
                 ✔ Filtros avanzados<br>
                 ✔ Visualizaciones dinámicas<br>
                 ✔ Descarga de resultados
             </p>
-
         </div>
         """, unsafe_allow_html=True)
 
