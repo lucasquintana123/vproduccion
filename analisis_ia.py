@@ -15,6 +15,7 @@ if HF_TOKEN is None and "HF_TOKEN" in st.secrets:
 # Cliente
 client = InferenceClient(
     api_key=HF_TOKEN,
+     base_url="https://router.huggingface.co/v1"
 )
 
 # Lista de modelos en orden de preferencia (Serverless de alta disponibilidad)
