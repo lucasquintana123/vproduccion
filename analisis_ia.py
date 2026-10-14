@@ -23,7 +23,11 @@ client = InferenceClient(
 MODELOS_DISPONIBLES = [
     "mistralai/Mistral-7B-Instruct-v0.3",
     "meta-llama/Llama-3.1-8B-Instruct",
-    "Qwen/Qwen2.5-72B-Instruct"
+    "Qwen/Qwen2.5-72B-Instruct",
+    "Qwen/Qwen2.5-0.5B-Instruct",
+    "Qwen/Qwen2.5-3B-Instruct",
+    "meta-llama/Llama-3.1-8B-Instruct",
+    "meta-llama/Llama-3.3-70B-Instruct"
 ]
 
 
