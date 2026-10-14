@@ -14,13 +14,14 @@ if HF_TOKEN is None and "HF_TOKEN" in st.secrets:
 
 # --- ACTUALIZACIÓN: Cliente apuntando al nuevo Router de Hugging Face ---
 client = InferenceClient(
-    api_key=HF_TOKEN
+    api_key=HF_TOKEN,
+    base_url="https://huggingface.co"
 )
 # -----------------------------------------------------------------------
 
 # Lista de modelos en orden de preferencia
 MODELOS_DISPONIBLES = [
-    "mistral-7b-instruct-v0.3"
+    "mistral-7b-instruct"
     #"meta-llama/Llama-3.1-8B-Instruct"
 ]
 
