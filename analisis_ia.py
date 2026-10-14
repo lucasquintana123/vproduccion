@@ -21,7 +21,8 @@ client = InferenceClient(
 
 # Lista de modelos en orden de preferencia
 MODELOS_DISPONIBLES = [
-    "meta-llama/Llama-3.1-8B-Instruct"
+    "mistralai/Mistral-7B-Instruct-v0.3"
+    #"meta-llama/Llama-3.1-8B-Instruct"
 ]
 
 
