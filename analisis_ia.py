@@ -12,17 +12,18 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 if HF_TOKEN is None and "HF_TOKEN" in st.secrets:
     HF_TOKEN = st.secrets["HF_TOKEN"]
 
-# Cliente
+# --- ACTUALIZACIÓN: Cliente apuntando al nuevo Router de Hugging Face ---
 client = InferenceClient(
-    api_key=HF_TOKEN
-     
+    api_key=HF_TOKEN,
+    base_url="https://router.huggingface.co/v1"
 )
+# -----------------------------------------------------------------------
 
-# Lista de modelos en orden de preferencia (Serverless de alta disponibilidad)
+# Lista de modelos en orden de preferencia
 MODELOS_DISPONIBLES = [
+    "mistralai/Mistral-7B-Instruct-v0.3",
     "meta-llama/Llama-3.1-8B-Instruct",
-    "Qwen/Qwen2.5-72B-Instruct",
-    "mistralai/Mistral-7B-Instruct-v0.3"
+    "Qwen/Qwen2.5-72B-Instruct"
 ]
 
 
@@ -99,14 +100,20 @@ def generar_analisis_ia(
 
             except Exception as e:
                 error_msg = str(e)
+                
+               
+                st.error(f"❌ Error con `{model_name}`: {error_msg}")
+                # ----------------------------------------------------------------
+
                 # Si el modelo está ocupado o en error de servidor, esperar y reintentar
                 if "busy" in error_msg.lower() or "503" in error_msg or "completion_error" in error_msg:
                     st.warning(f"El modelo `{model_name}` está ocupado. Reintentando ({intento + 1}/{max_retries})...")
                     time.sleep(delay_seconds * (intento + 1))  # Espera progresiva (4s, 8s, 12s)
                 else:
-                    # Otro tipo de error (ej. token inválido), rompe el bucle interno para probar el siguiente modelo
+                    # Otro tipo de error (ej. token inválido, modelo no encontrado, sin créditos), 
+                    # rompe el bucle interno para probar el siguiente modelo
                     break
 
     # Si ningún modelo respondió tras los reintentos
-    st.error("No se pudo generar el análisis en este momento porque los servidores de Hugging Face están saturados. Por favor, intenta de nuevo en un minuto.")
+    st.error("No se pudo generar el análisis en este momento. Revisa los errores mostrados arriba para más detalles.")
     return None
