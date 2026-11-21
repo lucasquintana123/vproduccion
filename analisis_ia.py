@@ -22,7 +22,7 @@ client = InferenceClient(
 # Lista de modelos en orden de preferencia
 MODELOS_DISPONIBLES = [
     
-    "meta-llama/Llama-3.1-8B-Instruct"
+   "meta-llama/Llama-3.1-8B-Instruct:hf-inference"
 ]
 
 
