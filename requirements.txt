@@ -8,4 +8,4 @@ seaborn
 openpyxl
 plotly
 python-dotenv
-huggingface_hub==0.35.3
+huggingface_hub
